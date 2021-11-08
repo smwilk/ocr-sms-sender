@@ -1,12 +1,12 @@
 import { useState } from "react"
 import { createWorker } from "tesseract.js"
 
-// 画像のOCR処理ステータス
+// OCR Statuses
 const STATUSES = {
   IDLE: "",
-  FAILED: "OCR処理に失敗しました。",
-  PENDING: "OCR処理中...",
-  SUCCEEDED: "OCR処理完了",
+  FAILED: "Failed to perform OCR",
+  PENDING: "Processing...",
+  SUCCEEDED: "Completed",
 }
 
 function OcrReader({onReadOcrData, onRemoveClicked}) {
@@ -14,27 +14,25 @@ function OcrReader({onReadOcrData, onRemoveClicked}) {
   const [ocrState, setOcrState] = useState(STATUSES.IDLE)
   const worker = createWorker()
   
-  // 画像のOCR処理
+  // Process image with OCR
   const readImageText = async() => {
     setOcrState(STATUSES.PENDING)
     try {
       await worker.load()
-      // OCRで読み取りたい言語を設定
-      await worker.loadLanguage("jpn")
-      await worker.initialize("jpn")
+      // Set the language to recognize
+      await worker.loadLanguage("eng")
+      await worker.initialize("eng")
       const { data: { text } } = await worker.recognize(selectedImage) 
       await worker.terminate()
-      
-      // 日本語テキストはスペースが入ってしまう可能性があるので、スペースを削除
-      const strippedText = text.replace(/\s+/g, "")
+
       onReadOcrData(strippedText)
       setOcrState(STATUSES.SUCCEEDED)
     } catch (err) {
       setOcrState(STATUSES.FAILED)
     }
   }
-  
-  // 別の画像を使用するボタンを押した時の処理
+
+  // Executed when "Use another image" is selected
   const handleRemoveClicked = () => {
     setSelectedImage(null)
     onRemoveClicked()
@@ -51,18 +49,18 @@ function OcrReader({onReadOcrData, onRemoveClicked}) {
       <div>
         {selectedImage?
           <div className="button-container">
-            <button onClick={readImageText}>画像をOCR処理する</button>
+            <button onClick={readImageText}>Process the image with OCR</button>
             <button
               className="remove-button"
               disabled={ocrState === STATUSES.PENDING}
               onClick={handleRemoveClicked}
             >
-                別の画像を使用する
+                Use another image
             </button>
           </div>
           :
           <>
-            <p>画像ファイルをアップロードしてください。</p>
+            <p>Upload an image to process</p>
             <input
               type="file"
               name="ocr-image"
@@ -70,7 +68,7 @@ function OcrReader({onReadOcrData, onRemoveClicked}) {
                 setSelectedImage(event.target.files[0])
               }}
             />
-            <p>対応フォーマット：bmp、jpg、png、pbm</p>
+            <p>Supported formats:bmp, jpg, png, pbm</p>
           </>
         }
       </div>
@@ -79,7 +77,7 @@ function OcrReader({onReadOcrData, onRemoveClicked}) {
       </div>
       <br />
     </div>
-  )
+  )  
 }
 
 export default OcrReader
