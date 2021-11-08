@@ -2,12 +2,12 @@ import { useEffect, useState, useRef } from "react"
 import "intl-tel-input/build/css/intlTelInput.css"
 import intlTelInput from "intl-tel-input"
 
-// SMS送信ステータス
+// SMS sending statuses
 const STATUSES = {
   IDLE: "",
-  FAILED: "メッセージ送信に失敗しました。",
-  PENDING: "メッセージ送信中...",
-  SUCCEEDED: "メッセージ送信完了",
+  FAILED: "Failed to send SMS",
+  PENDING: "Sending SMS...",
+  SUCCEEDED: "Finished sending SMS",
 }
 
 function SmsSender ({readText}) {
@@ -16,17 +16,17 @@ function SmsSender ({readText}) {
   const [smsSendingStatus, setSmsSendingStatus] = useState(STATUSES.IDLE)
   const inputRef = useRef(null)
 
-  // International Telephone Inputを初期化
+  // Initialize International Telephone Input
   const init = () => intlTelInput(inputRef.current, {
-    initialCountry: "jp"
+    initialCountry: "us"
   })
 
-  // レンダー後にInternational Telephone Inputを初期化
+  // Initialize International Telephone Input after render
   useEffect(() => {
     setIti(init())
   }, [])
 
-  // SMS送信リクエスト
+  // Request to send SMS
   const sendSMS = async () => {
     setSmsSendingStatus(STATUSES.PENDING)
     const country = iti.getSelectedCountryData()
@@ -50,17 +50,17 @@ function SmsSender ({readText}) {
     })
   }
 
-  // 送信ボタンが押されたタイミングでSMS送信する
+  // Send SMS when the send button is clicked
   const handleSubmit = e => {
     e.preventDefault()
     e.stopPropagation()
     sendSMS()
   }
-  
+
   return (
     <div>
       <form onSubmit={(e) => handleSubmit(e)}>
-        <div>検知されたテキストを編集：</div>
+        <div>Edit the recognized text:</div>
         <div>
           <textarea
             rows="15"
@@ -77,7 +77,7 @@ function SmsSender ({readText}) {
           type="tel"
         />
         <div>
-          <button disabled={smsSendingStatus === "Sending Message..."} type="submit">SMSメッセージを送信</button>
+          <button disabled={smsSendingStatus == "Sending Message..."} type="submit">Send SMS</button>
         </div>
       </form>
       <div className="status">
@@ -86,5 +86,6 @@ function SmsSender ({readText}) {
     </div>
   )
 }
+
 
 export default SmsSender
