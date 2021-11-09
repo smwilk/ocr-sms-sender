@@ -87,5 +87,4 @@ function SmsSender ({readText}) {
   )
 }
 
-
 export default SmsSender

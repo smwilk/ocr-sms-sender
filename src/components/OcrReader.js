@@ -25,7 +25,7 @@ function OcrReader({onReadOcrData, onRemoveClicked}) {
       const { data: { text } } = await worker.recognize(selectedImage) 
       await worker.terminate()
 
-      onReadOcrData(strippedText)
+      onReadOcrData(text)
       setOcrState(STATUSES.SUCCEEDED)
     } catch (err) {
       setOcrState(STATUSES.FAILED)
