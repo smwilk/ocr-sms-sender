@@ -77,7 +77,7 @@ function SmsSender ({readText}) {
           type="tel"
         />
         <div>
-          <button disabled={smsSendingStatus == "Sending Message..."} type="submit">Send SMS</button>
+          <button disabled={smsSendingStatus == "Sending SMS..."} type="submit">Send SMS</button>
         </div>
       </form>
       <div className="status">

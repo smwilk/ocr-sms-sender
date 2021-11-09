@@ -6,7 +6,7 @@ const STATUSES = {
   IDLE: "",
   FAILED: "Failed to perform OCR",
   PENDING: "Processing...",
-  SUCCEEDED: "Completed",
+  SUCCEEDED: "OCR processing complete",
 }
 
 function OcrReader({onReadOcrData, onRemoveClicked}) {
