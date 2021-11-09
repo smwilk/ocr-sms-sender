@@ -6,12 +6,12 @@ const port = 5000
 
 app.use(express.json())
 
+// Twilio credentials
 const accountSid = process.env.TWILIO_ACCOUNT_SID
 const authToken = process.env.TWILIO_AUTH_TOKEN
 const fromPhoneNumber = process.env.TWILIO_PHONE_NUMBER
 const client = require("twilio")(accountSid, authToken)
 
-// リクエストで受け取った電話番号とテキストをもとにSMSを送信する
 app.post("/send-sms", (req, res) => {
   client.messages
     .create({body: req.body.text, from: fromPhoneNumber, to: req.body.to})
